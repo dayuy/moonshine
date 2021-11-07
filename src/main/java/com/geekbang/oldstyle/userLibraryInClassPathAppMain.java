@@ -1,5 +1,7 @@
 package com.geekbang.oldstyle;
 
+import org.junit.Test;
+
 import java.util.*;
 
 class UserLibraryInClassPathAppMain {
@@ -61,6 +63,11 @@ class UserLibraryInClassPathAppMain {
         int[] val = {4, 2, 3};
         int maxVal = backpack01.knapsack(W, N, wt, val);
         System.out.println(maxVal);
+
+
+        String nameS = "abcdeffedcba";
+        boolean isP = Palindrome.isPalindrome(nameS);
+        System.out.println("isPalindrome:" + isP);
     }
 }
 
@@ -561,3 +568,57 @@ class reverseChainsaw {
         return newHead;
     }
 }
+
+
+
+/**
+ * 判断回文链表
+ * **/
+class Palindrome {
+    public void main(String[] args) {
+        String nameS = "abcdeffedcba";
+        boolean isP = isPalindrome(nameS);
+        System.out.println(isP);
+    }
+
+    // 1、判断一个字符串是不是回文串；利用「双指针技巧」
+    public static boolean isPalindrome(String s) {
+        int left = 0, right = s.length() -1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++; right++;
+        }
+        return true;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
