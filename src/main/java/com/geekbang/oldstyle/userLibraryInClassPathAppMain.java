@@ -1,6 +1,6 @@
 package com.geekbang.oldstyle;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -377,16 +377,17 @@ class nSum {
 }
 
 class TreeNode<T> {
-    private TreeNode left;
-    private TreeNode right;
-    private T data;
+    TreeNode left;
+    TreeNode right;
+    TreeNode next;
+    int val;
 
-    public TreeNode(T maxVal) {
-        this.data = maxVal;
+    public TreeNode(int val) {
+        this.val = val;
     }
 }
 
-class binaryTree{
+class binaryTree002{
 
     static TreeNode constructMaximumBinaryTree(int[] nums) {
         return build(nums, 0, nums.length - 1);
@@ -575,7 +576,7 @@ class reverseChainsaw {
  * 判断回文链表
  * **/
 class Palindrome {
-    public void main(String[] args) {
+    public static void main(String[] args) {
         String nameS = "abcdeffedcba";
         boolean isP = isPalindrome(nameS);
         System.out.println(isP);
@@ -585,12 +586,37 @@ class Palindrome {
     public static boolean isPalindrome(String s) {
         int left = 0, right = s.length() -1;
         while (left < right) {
+            System.out.println("left:" + left + " right:" + right);
             if (s.charAt(left) != s.charAt(right)) {
                 return false;
             }
-            left++; right++;
+            System.out.println(s.charAt(left));
+            System.out.println(s.charAt(right));
+            left++; right--;
         }
         return true;
+    }
+
+    /**
+     * 2、判断一个链表是不是回文链表
+     * 析：单链表无法倒着遍历，也就无法使用双指针。
+     * 解1：将原始链表反转存入一条新的链表，然后比较两条链表是否相同
+     * 解2：借助二叉树后续遍历思路，不反转链表也可以倒叙遍历链表
+     */
+    private static ListNode left;
+    public static boolean isPalindromeChain(ListNode head) {
+        left = head;
+        return traverse(head);
+    }
+
+    public static boolean traverse(ListNode right) {
+        if (right.next == null){
+            return true;
+        }
+        boolean res = traverse(right.next);
+        res = res && (right.val == left.val);
+        left = left.next;
+        return res;
     }
 }
 
