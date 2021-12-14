@@ -72,7 +72,7 @@ public class BinaryTree {
     // 2、填充二叉树节点的右侧指针
     // 析：如何把题目的要求细化为每个节点需要做的事情，但是只依赖一个节点的话，肯定没法连接「跨父节点」的两个相邻节点
     public static void connect(TreeNode left, TreeNode right) {
-        if (left == null || right == null) return null;
+        if (left == null || right == null) return;
         // left.left.next = left.right; 这里还是陷入了细节，
         // left.right.next = right.left;
         // right.left.next = right.right;
