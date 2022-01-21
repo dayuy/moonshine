@@ -621,6 +621,41 @@ class Palindrome {
 }
 
 
+/**
+ * debug 的方法
+ * 递归函数：直接在递归函数内部打印关键值，配合缩进，直观的观察递归函数执行情况
+ * **/
+class Debugger{
+    int count = 0;
+
+    void printIndent(int n) {
+        for (int i = 0; i < n; i++) {
+            System.out.println("  ");
+        }
+    }
+
+    int dp(String ring, int i, String key, int j) {
+        printIndent(count++);
+        System.out.printf("j = %d, j = %d\n", i, j);
+
+        if (j == key.length()) {
+            printIndent(--count);
+            System.out.printf("return 0\n");
+            return 0;
+        }
+
+        int res = Integer.MAX_VALUE;
+//        for (int k : key.charAt(j)) {
+//            res = Math.min(res, dp(ring, j, key, i+1));
+//        }
+
+        printIndent(--count);
+        System.out.printf("return %d\n", res);
+        return res;
+    }
+}
+
+
 
 
 
