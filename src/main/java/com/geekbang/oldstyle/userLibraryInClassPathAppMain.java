@@ -568,6 +568,79 @@ class reverseChainsaw {
         a.next = reverse_k_group(b, k);
         return newHead;
     }
+
+    // 合并两个有序链表
+    ListNode combine_2_list(ListNode l1, ListNode l2) {
+        // 「虚拟头结点」技巧，是链表算法中常见的技巧，dump节点占位符，避免处理空指针的情况，降低代码复杂性。
+        ListNode p = new ListNode(-1), dump = p;
+        // ListNode p1 = l1, p2 = l2; 完善：遍历前copy下，防止改变原始数据
+        while (l1 != null && l2 != null) {
+            if (l1.val >= l2.val) {
+                p.next = l2;
+                l2 = l2.next;
+            } else if (l1.val < l2.val) {
+                p.next = l1;
+                l1 = l1.next;
+            }
+            p = p.next;
+        }
+
+        if (l1 != null) {
+            p.next = l1;
+        }
+        if (l2 != null) {
+            p.next = l2;
+        }
+
+        return dump.next;
+    }
+
+    // 合并 k 个有序链表
+    // 如何快速找到k个节点中最小的节点，接到结果链表上？
+    // 「优先级队列（二叉堆）」，把链表节点放入一个最小堆，就可以每次获得k个节点中的最小节点
+    ListNode combine_k_list(ListNode[] lists) {
+        if (lists.length == 0) return null;
+        ListNode dump = new ListNode(-1);
+        ListNode p = dump;
+
+        PriorityQueue<ListNode> pq = new PriorityQueue<ListNode>(lists.length, (a, b)->(a.val - b.val));
+
+        for (ListNode head : lists) {
+            if (head != null) {
+                pq.add(head);
+            }
+        }
+
+        while (!pq.isEmpty()) {
+            // 获取最小节点，接到节点链表中
+            ListNode node = pq.poll();
+            p.next = node;
+            if (node.next != null) {
+                pq.add(node.next);
+            }
+            p = p.next;
+        }
+    }
+}
+
+class PriorityQueue {
+    LinkedList<ListNode> q;
+
+    PriorityQueue(int n, fun) {
+        q = new LinkedList<ListNode>();
+    }
+
+    public void add(ListNode n) {
+        q.addLast(n);
+    }
+
+    public ListNode poll() {
+        return q.pollLast();
+    }
+
+    public boolean isEmpty() {
+        return q.isEmpty();
+    }
 }
 
 
