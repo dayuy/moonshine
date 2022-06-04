@@ -7,11 +7,11 @@ public class Char01 {
         char c3 = '韩';
         char c4 = 97; // 字符类型可以直接存放数字
 
-        System.out.println(c4); // 当输出时，会输出 97 表示的字符 =》 编码
+        System.out.println(c4); // 当输出时，会输出 97 表示的字符 =》 编码 a
 
         char c5 = 'a';
         System.out.println(c5);
-        System.out.println((int) c5);
+        System.out.println((int) c5); // 编码a对应的unicode数字
         char c6 = '韩';
         System.out.println((int) c6);
         char c7 = 38889;

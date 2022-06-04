@@ -1,7 +1,5 @@
 package com.geekbang.oldstyle;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.*;
 
 class UserLibraryInClassPathAppMain {
@@ -68,6 +66,10 @@ class UserLibraryInClassPathAppMain {
         String nameS = "abcdeffedcba";
         boolean isP = Palindrome.isPalindrome(nameS);
         System.out.println("isPalindrome:" + isP);
+
+        int[] preNumbers = new int[]{-2, 0, 3, -5, 2, -1};
+        NumArray numArray = new NumArray(preNumbers);
+        numArray.sumRange(1, 4);
     }
 }
 
@@ -335,6 +337,8 @@ class coveredIntervals {
 }
 
 class nSum {
+    // 找到数组中，任意两个数之和为target
+    // 利用左右指针
     static List<Integer> twoSum(int[] nums, int target) {
         Arrays.sort(nums);
         List<Integer> res = new ArrayList<Integer>();
@@ -595,7 +599,7 @@ class reverseChainsaw {
         return dump.next;
     }
 
-    // 合并 k 个有序链表
+    // ？？？合并 k 个有序链表
     // 如何快速找到k个节点中最小的节点，接到结果链表上？
     // 「优先级队列（二叉堆）」，把链表节点放入一个最小堆，就可以每次获得k个节点中的最小节点
     ListNode combine_k_list(ListNode[] lists) {
@@ -603,7 +607,8 @@ class reverseChainsaw {
         ListNode dump = new ListNode(-1);
         ListNode p = dump;
 
-        PriorityQueue<ListNode> pq = new PriorityQueue<ListNode>(lists.length, (a, b)->(a.val - b.val));
+        // 优先队列 最小堆
+        PriorityQueue<ListNode> pq = new PriorityQueue<>(lists.length, (a, b)->(a.val - b.val));
 
         for (ListNode head : lists) {
             if (head != null) {
@@ -620,29 +625,148 @@ class reverseChainsaw {
             }
             p = p.next;
         }
+
+        return dump;
     }
+
+    // 返回链表的倒数第k个元素（只遍历一遍）
+    ListNode findFromEnd(ListNode head, int k) {
+        ListNode first = head, last = head;
+        int p1 = 0;
+        while (head.next != null) {
+            if (p1 >= k) {
+                last = last.next;
+            }
+            first = first.next;
+            p1++;
+        }
+        return last;
+    }
+
+    ListNode findFromEnd_2(ListNode head, int k) {
+        ListNode p1 = head, p2 = head;
+        for (int i = 0; i < k; i++) {
+            p1 = p1.next;
+        }
+        while (p1 != null) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        return p2;
+    }
+
+    // 删除倒数第 n 个节点
+    ListNode removeNthFromEnd(ListNode head, int n) {
+        // 使用虚拟节点 防止出现空指针（如只有5个节点时，删除倒数第五个节点）
+        ListNode dump = new ListNode(-1);
+        dump.next = head;
+        ListNode nth = findFromEnd_2(dump, n+1);
+        nth.next = nth.next.next;
+        return dump.next;
+    }
+
+    // 链表的中点 使用快慢指针
+    ListNode middleNode(ListNode head) {
+        ListNode fast = head, slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    // 判断链表是不是闭环
+    boolean hasCycle(ListNode head) {
+        ListNode fast = head, slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 计算环的起点。 既然是环了，为啥还有起点之分
+    ListNode detectCycyle(ListNode head) {
+        ListNode fast = head, slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow) {
+                break;
+            }
+        }
+        // 说明遇到空指针，表明没有环
+        if (fast == null || fast.next == null) {
+            return null;
+        }
+
+        // 重新指向头结点
+        slow = head;
+        // 快慢指针同步进行，相交的点就是起点
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
+
+    // 两条链表是否相交，如何相交，返回相交的节点，没有则返回null
+    // 要求：不需要额外的空间，只使用两个指针
+    // 难点：由于两条链表长度不同，两条链表之间的节点无法对应
+    // 解法1：两条链表分别首尾连接另一条链表，构成长度相同，就可以比较对应节点了
+    // 解法2：两条链表分别倒叙，就可以一一对应比较了，而不用顾及长度
+    ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode p1 = headA, p2 = headB;
+        while (p1 != null && p1.next != null) {
+            if (p1.next == null) {
+                p1.next = headB;
+            }
+            p1 = p1.next;
+
+            if (p2.next == null) {
+                p2.next = headA;
+            }
+            p2 = p2.next;
+
+            if (p1 == p2) {
+                return p1;
+            }
+        }
+        return null;
+    }
+
+    ListNode getIntersectionNode_v2(ListNode headA, ListNode headB) {
+        ListNode p1 = inverseListNode(headA);
+        ListNode p2 = inverseListNode(headB);
+        ListNode res = null;
+        while (p1 == p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+            res = p1;
+        }
+        return res;
+    }
+
+    ListNode inverseListNode(ListNode head) {
+        ListNode pre, cur, nxt;
+        pre = null; cur = head; nxt = head;
+        while (cur != null) {
+            nxt = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
+
 }
-
-class PriorityQueue {
-    LinkedList<ListNode> q;
-
-    PriorityQueue(int n, fun) {
-        q = new LinkedList<ListNode>();
-    }
-
-    public void add(ListNode n) {
-        q.addLast(n);
-    }
-
-    public ListNode poll() {
-        return q.pollLast();
-    }
-
-    public boolean isEmpty() {
-        return q.isEmpty();
-    }
-}
-
 
 
 /**
@@ -670,6 +794,19 @@ class Palindrome {
         return true;
     }
 
+    // 左右指针反转数组
+    void reverseString(char[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            char temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left--;
+            right--;
+        }
+    }
+
     /**
      * 2、判断一个链表是不是回文链表
      * 析：单链表无法倒着遍历，也就无法使用双指针。
@@ -683,7 +820,7 @@ class Palindrome {
     }
 
     public static boolean traverse(ListNode right) {
-        if (right.next == null){
+        if (right == null){
             return true;
         }
         boolean res = traverse(right.next);
@@ -727,6 +864,27 @@ class Debugger{
         return res;
     }
 }
+
+
+/**
+ * 数组题目：
+ * 1、前缀和数组：给定一个整数数组，求出数组从索引 i 到 j 范围内元素的总和，包含i j两点
+ * **/
+class NumArray {
+    private int[] preSum;
+
+    public NumArray(int[] nums) {
+        preSum = new int[nums.length + 1];
+        for (int i = 1; i < preSum.length; i++) {
+            preSum[i] = preSum[i-1] + nums[i-1];
+        }
+    }
+
+    public int sumRange(int left, int right) {
+        return preSum[right] - preSum[left];
+    }
+}
+
 
 
 
